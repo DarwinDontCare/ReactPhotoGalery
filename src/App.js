@@ -1,23 +1,42 @@
-import logo from './logo.svg';
 import './App.css';
+import React from 'react';
+import axios from "axios";
+import MainPhotoContainer from './components/mainPhotoContainer';
+import InputField from './components/InputField';
 
 function App() {
+
+  const [photoList, setPhotoList] = React.useState([]);
+  const [FavoritePhotoList, setFavoritePhotoList] = React.useState([]);
+  const [filter, setFilter] = React.useState("");
+
+  const apiUrl = "https://jsonplaceholder.typicode.com/photos";
+
+  React.useEffect(() => {
+    retriveDataFromAPI();
+  }, []);
+
+  function retriveDataFromAPI() {
+    axios.get(apiUrl).then((response) => {
+      let photos = [];
+      console.log(response.data[0]);
+      for (let i = 0; i < 500; i++) {
+        photos.push({
+          image: response.data[i].url,
+          title: response.data[i].title,
+          thumbnail: response.data[i].thumbnailUrl,
+          id: response.data[i].id
+        });
+      };
+      setPhotoList(photos);
+    });
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <InputField setFilter={setFilter}></InputField>
+      <br/>
+      <MainPhotoContainer photoList={photoList} filter={filter} FavoritePhotoList={FavoritePhotoList} setFavoritePhotoList={setFavoritePhotoList}/>
     </div>
   );
 }

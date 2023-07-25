@@ -24,6 +24,17 @@
   color: white;
 }
 
+.favorite-button {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0);
+  border: rgba(0, 0, 0, 0);
+}
+
+.photo-container {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
 .App-link {
   color: #61dafb;
 }
