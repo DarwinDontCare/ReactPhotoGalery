@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../App.css";
 
-export default function PhotoObject({photoInfo, FavoritePhotoList, setFavoritePhotoList}) {
+export default function PhotoObject({photoInfo, FavoritePhotoList, setFavoritePhotoList, isFavoritesList,  setIsShowingImageInfo, setCurrentImageInfo}) {
     const [ButtonImage, setButtonImage] = useState("⬜");
 
     const image = photoInfo.image;
@@ -11,14 +11,13 @@ export default function PhotoObject({photoInfo, FavoritePhotoList, setFavoritePh
 
     async function loadFavoriteImages() {
         try {
-            FavoritePhotoList.forEach((photo) => {
-                if (photo.id === id) setButtonImage("⭐");
-            });
+            if (FavoritePhotoList.filter(photo => photo.id === id).length > 0) setButtonImage("⭐");
         } catch {}
     }
 
     useEffect(() => {
-        if (ButtonImage === "⬜") loadFavoriteImages();
+        if (ButtonImage === "⬜" && !isFavoritesList) loadFavoriteImages();
+        if (isFavoritesList) setButtonImage("⭐");
     }, []);
 
     function addToFavorites() {
@@ -32,18 +31,32 @@ export default function PhotoObject({photoInfo, FavoritePhotoList, setFavoritePh
             });
             setFavoritePhotoList(newList);
             setButtonImage("⭐");
-        } else {
-            let idx = newList.findIndex(photo => photo.id === id);
-            newList.splice(idx, idx);
-            
+        } else {            
             setFavoritePhotoList(newList.filter(photo => photo.id !== id));
-            setButtonImage("⬜");
+            if (!FavoritePhotoList.includes({
+                title: name,
+                thumbnail: thumbnail,
+                image: image,
+                id: id
+            }) && !isFavoritesList) setButtonImage("⬜");
         }
-        console.log(FavoritePhotoList);
+        //console.log(FavoritePhotoList);
+    }
+
+    function showImageInfo(e) {
+        if(e.target.nodeName !== "BUTTON" && e.target.nodeName !== "SPAN") {
+            setCurrentImageInfo({
+                title: name,
+                thumbnail: thumbnail,
+                image: image,
+                id: id
+            });
+            setIsShowingImageInfo(true);
+        }
     }
 
     return (
-        <div className="Photo-elements col">
+        <div className="Photo-elements col" onClick={showImageInfo}>
             <img src={thumbnail} />
             <br/>
             <span>{name}</span>

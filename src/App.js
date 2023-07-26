@@ -6,14 +6,17 @@ import axios from "axios";
 import MainPhotoContainer from './components/mainPhotoContainer';
 import InputField from './components/InputField';
 import SideBar from './components/SideBar';
+import ImageInfoScreen from './components/ImageInfoScreen';
 
 function App() {
 
   const [photoList, setPhotoList] = React.useState([]);
   const [FavoritePhotoList, setFavoritePhotoList] = React.useState([]);
   const [filter, setFilter] = React.useState("");
-  const [sideBarClassName, setSideBarClassName] = React.useState("sidebar-closed");
+  const [sideBarClassName, setSideBarClassName] = React.useState("sidebar");
   const [currentScreen, setCurrentScreen] = React.useState("main");
+  const [isShowingImageInfo, setIsShowingImageInfo] = React.useState(false);
+  const [currentImageInfo, setCurrentImageInfo] = React.useState({});
 
   const apiUrl = "https://jsonplaceholder.typicode.com/photos";
 
@@ -39,9 +42,12 @@ function App() {
 
   return (
     <div className="App">
-      <InputField setFilter={setFilter} setSideBarClassName={setSideBarClassName} sideBarClassName={sideBarClassName}></InputField>
-      <SideBar sideBarClassName={sideBarClassName} setCurrentScreen={setCurrentScreen}/>
-      <MainPhotoContainer photoList={photoList} filter={filter} FavoritePhotoList={FavoritePhotoList} setFavoritePhotoList={setFavoritePhotoList} currentScreen={currentScreen}/>
+      {!isShowingImageInfo && <div>
+        <InputField setFilter={setFilter} setSideBarClassName={setSideBarClassName} sideBarClassName={sideBarClassName}></InputField>
+        <SideBar sideBarClassName={sideBarClassName} setCurrentScreen={setCurrentScreen}/>
+        <MainPhotoContainer photoList={photoList} filter={filter} FavoritePhotoList={FavoritePhotoList} setFavoritePhotoList={setFavoritePhotoList} currentScreen={currentScreen} setIsShowingImageInfo={setIsShowingImageInfo} setCurrentImageInfo={setCurrentImageInfo}/>
+      </div>}
+      {isShowingImageInfo && <ImageInfoScreen currentImageInfo={currentImageInfo} setIsShowingImageInfo={setIsShowingImageInfo} FavoritePhotoList={FavoritePhotoList} setFavoritePhotoList={setFavoritePhotoList}/>}
     </div>
   );
 }

@@ -2,46 +2,33 @@ import React from "react";
 import PhotoObject from "./PhotoObject";
 import "../App.css";
 
-export default function MainPhotoContainer({photoList, filter, FavoritePhotoList, setFavoritePhotoList, currentScreen}) {
+export default function MainPhotoContainer({photoList, filter, FavoritePhotoList, setFavoritePhotoList, currentScreen, setIsShowingImageInfo, setCurrentImageInfo}) {
+
+    function getPhotosFromList(list, isFavoritesList, filter) {
+        let photos = [];
+        list.forEach((photo) => {
+            if (!filter.split().filter(value => (value !== "" && value !== " ")).length > 0) {
+                if (photo.title.includes(filter)) {
+                    photos.push(
+                        <PhotoObject photoInfo={photo}FavoritePhotoList={FavoritePhotoList} setFavoritePhotoList={setFavoritePhotoList} isFavoritesList={isFavoritesList} setIsShowingImageInfo={setIsShowingImageInfo} setCurrentImageInfo={setCurrentImageInfo}/>
+                    );
+                }
+            } else {
+                photos.push(
+                    <PhotoObject photoInfo={photo} FavoritePhotoList={FavoritePhotoList} setFavoritePhotoList={setFavoritePhotoList} isFavoritesList={isFavoritesList} setIsShowingImageInfo={setIsShowingImageInfo} setCurrentImageInfo={setCurrentImageInfo}/>
+                );
+            }
+        });
+        return photos;
+    }
 
     function renderPhotos() {
         let photos = [];
+        if (currentScreen === "main") photos = getPhotosFromList(photoList, false, filter);
+        else if (currentScreen === "favorites") photos = getPhotosFromList(FavoritePhotoList, true, filter);
 
-        if (!filter.split().filter(value => (value !== "" && value !== " ")).length > 0) {
-            if (currentScreen === "main") {
-                photoList.forEach((photo) => {
-                    photos.push(
-                        <PhotoObject photoInfo={photo} FavoritePhotoList={FavoritePhotoList} setFavoritePhotoList={setFavoritePhotoList}/>
-                    );
-                });
-            } else if (currentScreen === "favorites") {
-                FavoritePhotoList.forEach((photo) => {
-                    photos.push(
-                        <PhotoObject photoInfo={photo} FavoritePhotoList={FavoritePhotoList} setFavoritePhotoList={setFavoritePhotoList}/>
-                    );
-                });
-            }
-        } else {
-            if (currentScreen === "main") {
-                photoList.forEach((photo) => {
-                    if (photo.title.includes(filter)) {
-                        photos.push(
-                            <PhotoObject photoInfo={photo}FavoritePhotoList={FavoritePhotoList} setFavoritePhotoList={setFavoritePhotoList}/>
-                        );
-                    }
-                });
-            } else if (currentScreen === "favorites") {
-                FavoritePhotoList.forEach((photo) => {
-                    if (photo.title.includes(filter)) {
-                        photos.push(
-                            <PhotoObject photoInfo={photo}FavoritePhotoList={FavoritePhotoList} setFavoritePhotoList={setFavoritePhotoList}/>
-                        );
-                    }
-                });
-            }
-        }
         if (photos.length > 0)  return photos;
-        else return (<p>No results found</p>);
+        else return (<p style={{width: "100%", fontSize: "2rem", textAlign: "center"}}>No results found</p>);
     }
 
     return (

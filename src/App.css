@@ -60,6 +60,18 @@
   text-align: center;
   margin-right: 5px;
   margin-top: 10px;
+  border: #000000ab;
+  border-width: 2px;
+  border-style:dashed;
+  padding-top: 4px;
+  margin-bottom: 4px;
+}
+
+.Photo-elements:hover {
+  width: 230%;
+  border: #161616cc;
+  background-color: #444444b7;
+  cursor: pointer;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -85,8 +97,14 @@
   border: rgba(0, 0, 0, 0);
 }
 
+.favorite-button:hover {
+  border: #ffffffc9;
+  border-width: 2px;
+  border-style: dashed;
+}
+
 .photo-container {
-  position:inherit;
+  position:absolute;
   overflow-x: hidden;
   overflow-y: scroll;
   text-align: left;
@@ -107,10 +125,20 @@
   width: 20rem;
   height: 93.2%;
   animation-name: Sidebar-hide;
-  animation-timing-function: linear;
+  animation-timing-function: ease-in-out;
   animation-duration: 0.5s;
   animation-play-state: running;
-  left: -100%;
+  left: -20rem;
+  background-color: rgba(43, 43, 43, 0.945);
+  box-shadow: 0 5px 5px rgb(22, 24, 23);
+  z-index: 10;
+}
+
+.sidebar {
+  position: fixed;
+  width: 20rem;
+  height: 93.2%;
+  left: -20rem;
   background-color: rgba(43, 43, 43, 0.945);
   box-shadow: 0 5px 5px rgb(22, 24, 23);
 }
@@ -120,7 +148,7 @@
   width: 20rem;
   height: 93.2%;
   animation-name: Sidebar-show;
-  animation-timing-function: linear;
+  animation-timing-function: ease-in-out;
   animation-duration: 0.5s;
   animation-play-state: running;
   left: 0;
@@ -142,6 +170,50 @@
   border-color: rgba(43, 43, 43, 0);
 }
 
+.Back-button {
+  position: fixed;
+  cursor: pointer;
+  margin-top: 1.2rem;
+  left: 0;
+  margin-left: 1rem;
+  height: 1.5rem;
+  width: 1.5rem;
+
+  background-color: rgba(43, 43, 43, 0);
+  border-color: rgba(43, 43, 43, 0);
+}
+
+.Big-image {
+  margin-top: 1rem;
+}
+
+.Back-button:hover {
+  height: 1.8rem;
+  width: 1.8rem;
+  margin-left: 0.8rem;
+  margin-top: 1rem;
+  border: #ffffffc9;
+  border-width: 2px;
+  border-style: dashed;
+}
+
+.Sidebar-toggle:hover {
+  border: #ffffffc9;
+  border-width: 2px;
+  border-style: dashed;
+}
+
+.Top-bar {
+  position: fixed;
+  width: 100%;
+  min-height: 4rem;
+  max-height: 10%;
+  left: 50%;
+  margin-left: -50%;
+  box-shadow: 0 5px 5px rgb(22, 24, 23);
+  z-index: 100;
+}
+
 .Sidebar-menus {
   position: relative;
   cursor: pointer;
@@ -154,6 +226,11 @@
   border-right: 0;
   box-shadow: 0 5px 5px rgb(22, 24, 23);
   font-size: 150%;
+}
+
+.Sidebar-menus:hover {
+  height: 6rem;
+  background-color: rgba(61, 61, 61, 0.945);
 }
 
 @keyframes App-logo-spin {

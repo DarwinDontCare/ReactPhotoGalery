@@ -9,7 +9,7 @@ export default function InputField({setFilter, setSideBarClassName, sideBarClass
     }
 
     function toggleSidebar() {
-        if (sideBarClassName === "sidebar-closed") {
+        if (sideBarClassName === "sidebar-closed" || sideBarClassName === "sidebar") {
             setSideBarClassName("sidebar-open")
         } else {
             setSideBarClassName("sidebar-closed");
