@@ -18,14 +18,14 @@ export default function PhotoObject({photoInfo, FavoritePhotoList, setFavoritePh
     }
 
     useEffect(() => {
-        loadFavoriteImages();
+        if (ButtonImage === "⬜") loadFavoriteImages();
     }, []);
 
     function addToFavorites() {
         let newList = FavoritePhotoList;
         if (newList.filter(photo => photo.id === id).length < 1) {
             newList.push({
-                name: name,
+                title: name,
                 thumbnail: thumbnail,
                 image: image,
                 id: id
@@ -34,7 +34,7 @@ export default function PhotoObject({photoInfo, FavoritePhotoList, setFavoritePh
             setButtonImage("⭐");
         } else {
             let idx = newList.findIndex(photo => photo.id === id);
-            newList.splice(idx, idx + 1);
+            newList.splice(idx, idx);
             
             setFavoritePhotoList(newList.filter(photo => photo.id !== id));
             setButtonImage("⬜");
@@ -43,7 +43,7 @@ export default function PhotoObject({photoInfo, FavoritePhotoList, setFavoritePh
     }
 
     return (
-        <div>
+        <div className="Photo-elements col">
             <img src={thumbnail} />
             <br/>
             <span>{name}</span>
