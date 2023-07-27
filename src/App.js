@@ -6,7 +6,7 @@ import axios from "axios";
 import MainPhotoContainer from './components/mainPhotoContainer';
 import InputField from './components/InputField';
 import SideBar from './components/SideBar';
-import ImageInfoScreen from './components/ImageInfoScreen';
+import { createContext } from "react";
 
 function App() {
 
@@ -15,14 +15,35 @@ function App() {
   const [filter, setFilter] = React.useState("");
   const [sideBarClassName, setSideBarClassName] = React.useState("sidebar");
   const [currentScreen, setCurrentScreen] = React.useState("main");
-  const [isShowingImageInfo, setIsShowingImageInfo] = React.useState(false);
-  const [currentImageInfo, setCurrentImageInfo] = React.useState({});
+
+  const context = createContext();
 
   const apiUrl = "https://jsonplaceholder.typicode.com/photos";
 
+  function loadFavoriteImages() {
+      let favorites = [];
+      try {
+          favorites = JSON.parse(localStorage['favoriteImages']);
+      } catch {
+          localStorage.setItem('favoriteImages', JSON.stringify([]));
+      }
+
+      setFavoritePhotoList(favorites);
+  }
+
+  function saveFavoriteImages(favorites) {
+      try {
+          localStorage['favoriteImages'] = JSON.stringify(favorites);
+      } catch {
+          localStorage.setItem('favoriteImages', JSON.stringify(favorites));
+      }
+      setFavoritePhotoList(favorites);
+  }
+
   React.useEffect(() => {
     retriveDataFromAPI();
-  }, []);
+    loadFavoriteImages();
+  }, [App]);
 
   function retriveDataFromAPI() {
     axios.get(apiUrl).then((response) => {
@@ -42,14 +63,30 @@ function App() {
 
   return (
     <div className="App">
-      {!isShowingImageInfo && <div>
+      <div>
         <InputField setFilter={setFilter} setSideBarClassName={setSideBarClassName} sideBarClassName={sideBarClassName}></InputField>
         <SideBar sideBarClassName={sideBarClassName} setCurrentScreen={setCurrentScreen}/>
-        <MainPhotoContainer photoList={photoList} filter={filter} FavoritePhotoList={FavoritePhotoList} setFavoritePhotoList={setFavoritePhotoList} currentScreen={currentScreen} setIsShowingImageInfo={setIsShowingImageInfo} setCurrentImageInfo={setCurrentImageInfo}/>
-      </div>}
-      {isShowingImageInfo && <ImageInfoScreen currentImageInfo={currentImageInfo} setIsShowingImageInfo={setIsShowingImageInfo} FavoritePhotoList={FavoritePhotoList} setFavoritePhotoList={setFavoritePhotoList}/>}
+        <context.Provider value={{ photoList: photoList,
+                                    filter: filter,
+                                    FavoritePhotoList: FavoritePhotoList,
+                                    currentScreen: currentScreen,
+                                    saveFavoriteImages: saveFavoriteImages
+                                }}>
+          <MainPhotoContainer context={context}/>
+        </context.Provider>
+      </div>
     </div>
   );
 }
+
+//{<Redirect to={{
+//  pathname: "/user-profile",
+//  state: {
+//    currentImageInfo: currentImageInfo,
+//    setIsShowingImageInfo: setIsShowingImageInfo,
+//    FavoritePhotoList: FavoritePhotoList,
+//    setFavoritePhotoList: setFavoritePhotoList
+//  }
+//}} />}
 
 export default App;

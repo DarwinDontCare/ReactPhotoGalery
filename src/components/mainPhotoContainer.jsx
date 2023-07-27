@@ -1,22 +1,28 @@
 import React from "react";
 import PhotoObject from "./PhotoObject";
 import "../App.css";
+import { useContext } from "react";
 
-export default function MainPhotoContainer({photoList, filter, FavoritePhotoList, setFavoritePhotoList, currentScreen, setIsShowingImageInfo, setCurrentImageInfo}) {
+export default function MainPhotoContainer({context}) {
 
-    function getPhotosFromList(list, isFavoritesList) {
+    const {photoList} = useContext(context);
+    const {filter} = useContext(context);
+    const {currentScreen} = useContext(context);
+    const {FavoritePhotoList} = useContext(context);
+
+    function getPhotosFromList(list) {
         let photos = [];
         list.forEach((photo) => {
             if (filter.split().filter(value => (value !== "" && value !== " ")).length > 0) {
                 console.log(filter);
                 if (photo.title.includes(filter)) {
                     photos.push(
-                        <PhotoObject photoInfo={photo}FavoritePhotoList={FavoritePhotoList} setFavoritePhotoList={setFavoritePhotoList} isFavoritesList={isFavoritesList} setIsShowingImageInfo={setIsShowingImageInfo} setCurrentImageInfo={setCurrentImageInfo}/>
+                        <PhotoObject photoInfo={photo} context={context}/>
                     );
                 }
             } else {
                 photos.push(
-                    <PhotoObject photoInfo={photo} FavoritePhotoList={FavoritePhotoList} setFavoritePhotoList={setFavoritePhotoList} isFavoritesList={isFavoritesList} setIsShowingImageInfo={setIsShowingImageInfo} setCurrentImageInfo={setCurrentImageInfo}/>
+                    <PhotoObject photoInfo={photo} context={context}/>
                 );
             }
         });
