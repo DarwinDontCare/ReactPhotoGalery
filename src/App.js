@@ -11,7 +11,7 @@ import { createContext } from "react";
 function App() {
 
   const [photoList, setPhotoList] = React.useState([]);
-  const [FavoritePhotoList, setFavoritePhotoList] = React.useState([]);
+  const [FavoritePhotoList, setFavoritePhotoList] = React.useState({});
   const [filter, setFilter] = React.useState("");
   const [sideBarClassName, setSideBarClassName] = React.useState("sidebar");
   const [currentScreen, setCurrentScreen] = React.useState("main");
@@ -23,12 +23,12 @@ function App() {
   function loadFavoriteImages() {
       let favorites = [];
       try {
-          favorites = JSON.parse(localStorage['favoriteImages']);
+          favorites = JSON.parse(localStorage.getItem('favoriteImages'));
       } catch {
           localStorage.setItem('favoriteImages', JSON.stringify([]));
       }
 
-      setFavoritePhotoList(favorites);
+      return favorites;
   }
 
   function saveFavoriteImages(favorites) {
@@ -37,12 +37,16 @@ function App() {
       } catch {
           localStorage.setItem('favoriteImages', JSON.stringify(favorites));
       }
+
+      console.log(localStorage.getItem('favoriteImages'));
+
       setFavoritePhotoList(favorites);
   }
 
   React.useEffect(() => {
     retriveDataFromAPI();
-    loadFavoriteImages();
+    setFavoritePhotoList(loadFavoriteImages());
+    console.log(FavoritePhotoList);
   }, [App]);
 
   function retriveDataFromAPI() {
@@ -78,15 +82,5 @@ function App() {
     </div>
   );
 }
-
-//{<Redirect to={{
-//  pathname: "/user-profile",
-//  state: {
-//    currentImageInfo: currentImageInfo,
-//    setIsShowingImageInfo: setIsShowingImageInfo,
-//    FavoritePhotoList: FavoritePhotoList,
-//    setFavoritePhotoList: setFavoritePhotoList
-//  }
-//}} />}
 
 export default App;

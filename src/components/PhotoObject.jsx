@@ -22,9 +22,10 @@ export default function PhotoObject({photoInfo, context}) {
         } catch {}
     }
 
-    
-    if (ButtonImage === "⬜" && !isFavoritesList) setIsFavoriteSymbol();
-    if (isFavoritesList) setButtonImage("⭐");
+    useEffect(() => {
+        if (ButtonImage === "⬜" && !isFavoritesList) setIsFavoriteSymbol();
+        if (isFavoritesList) setButtonImage("⭐");
+    }, []);
 
     function addToFavorites() {
         let newList = FavoritePhotoList;

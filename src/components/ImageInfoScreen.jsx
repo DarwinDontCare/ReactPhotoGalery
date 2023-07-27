@@ -14,16 +14,18 @@ export default function ImageInfoScreen() {
     const [isLoading, seIsLoading] = React.useState(true);
 
     const { imageId } = useParams();
+    const id = Number.parseInt(imageId)
 
     const apiUrl = 'https://jsonplaceholder.typicode.com/photos';
 
     function loadFavoriteImagesFromLocalStorage() {
         let favorites = [];
         try {
-            favorites = JSON.parse(localStorage['favoriteImages']);
+            favorites = JSON.parse(localStorage.getItem('favoriteImages'));
         } catch {
             localStorage.setItem('favoriteImages', JSON.stringify([]));
         }
+        console.log(localStorage.getItem('favoriteImages'));
 
         return favorites;
     }
@@ -34,20 +36,19 @@ export default function ImageInfoScreen() {
         } catch {
             localStorage.setItem('favoriteImages', JSON.stringify(favorites));
         }
+        console.log(localStorage.getItem('favoriteImages'));
     }
 
     const FavoritePhotoList = loadFavoriteImagesFromLocalStorage();
 
     function retriveDataFromAPI() {
         axios.get(apiUrl).then((response) => {
-            let photo = [];
-            console.log(response.data[imageId - 1]);
-            photo.push({
+            let photo = {
                 image: response.data[imageId - 1].url,
                 title: response.data[imageId - 1].title,
                 thumbnail: response.data[imageId - 1].thumbnailUrl,
                 id: response.data[imageId - 1].id
-            });
+            };
             setImage(response.data[imageId - 1].url);
             setTitle(response.data[imageId - 1].title);
             setCurrentImageInfo(photo);
@@ -58,7 +59,7 @@ export default function ImageInfoScreen() {
 
     function loadFavoriteImages() {
         try {
-            if (FavoritePhotoList.filter(photo => photo.id === currentImageInfo.id).length > 0) setButtonImage("⭐");
+            if (FavoritePhotoList.filter(photo => photo.id === id).length > 0) setButtonImage("⭐");
             else (setButtonImage("⬜"))
         } catch {}
     }
@@ -69,12 +70,12 @@ export default function ImageInfoScreen() {
 
     function addToFavorites() {
         let newList = FavoritePhotoList;
-        if (newList.filter(photo => photo.id === currentImageInfo.id).length < 1) {
+        if (newList.filter(photo => photo.id === id).length < 1) {
             newList.push(currentImageInfo);
             saveFavoriteImages(newList);
             setButtonImage("⭐");
         } else {            
-            saveFavoriteImages(newList.filter(photo => photo.id !== currentImageInfo.id));
+            saveFavoriteImages(newList.filter(photo => photo.id !== id));
             setButtonImage("⬜");
         }
     }
